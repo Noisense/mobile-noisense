@@ -7,6 +7,10 @@ import android.os.Build
 import android.util.Log
 import com.example.audiorecorderapp.db.Recording
 import com.example.audiorecorderapp.helper.DBHelper
+import com.example.audiorecorderapp.service.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -69,6 +73,28 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
         } else {
             Log.i("AndroidAudioRecorder", "Successfully inserted recording with ID $audioId.")
         }
+
+        val call = ApiClient.apiService.addRecording(recording)
+
+        call.enqueue(object: Callback<Map<String, String>> {
+            override fun onResponse(
+                call: Call<Map<String, String>>,
+                response: Response<Map<String, String>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.i("API_CALL", "Data successfully sent to server ${recording}")
+                } else {
+                    Log.e("API_CALL", "Failed to send data: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                Log.e("API_CALL", "Error calling API", t)
+            }
+        })
+// ...
+
+
 
         recorder = null
     }
