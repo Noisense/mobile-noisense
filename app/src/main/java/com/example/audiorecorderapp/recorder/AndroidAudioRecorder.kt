@@ -74,7 +74,14 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
             Log.i("AndroidAudioRecorder", "Successfully inserted recording with ID $audioId.")
         }
 
-        val call = ApiClient.apiService.addRecording(recording)
+        val call = ApiClient.apiService.addRecording(
+            recording.audio_id,
+            recording.audio_title,
+            recording.audio_timestamp,
+            recording.audio_path,
+            recording.audio_size,
+            recording.audio_duration
+        )
 
         call.enqueue(object: Callback<Map<String, String>> {
             override fun onResponse(
