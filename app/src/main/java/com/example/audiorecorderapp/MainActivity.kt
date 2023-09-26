@@ -1,20 +1,28 @@
 package com.example.audiorecorderapp
 
 import android.Manifest
-import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
-import androidx.compose.material.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import com.example.audiorecorderapp.playback.AndroidAudioPlayer
 import com.example.audiorecorderapp.recorder.AndroidAudioRecorder
@@ -46,9 +54,16 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.width(240.dp)
+                        modifier = Modifier.size(70.dp),
+                        shape = CircleShape
                     ) {
-                        Text(text = "Start Recording", color = White, fontSize = 18.sp)
+//                        Text(text = "Start Recording", color = White, fontSize = 18.sp)
+                        Icon(
+                            imageVector = Icons.Default.Mic,
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.size(40.dp)
+                        )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
@@ -56,9 +71,14 @@ class MainActivity : ComponentActivity() {
                             recorder.stop()
                         },
                         colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.width(240.dp)
+                        modifier = Modifier.size(70.dp),
+                        shape = CircleShape
                     ) {
-                        Text(text = "Stop Recording", color = White, fontSize = 18.sp)
+//                        Text(text = "Stop Recording", color = White, fontSize = 18.sp)
+                        Icon(imageVector = Icons.Default.Stop,
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.size(40.dp))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
@@ -66,9 +86,14 @@ class MainActivity : ComponentActivity() {
                             player.playFile(audioFile ?: return@Button)
                         },
                         colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.width(240.dp)
+                        modifier = Modifier.size(70.dp),
+                        shape = CircleShape
                     ) {
-                        Text(text = "Play", color = White, fontSize = 18.sp)
+//                        Text(text = "Play", color = White, fontSize = 18.sp)
+                        Icon(imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.size(40.dp))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
@@ -76,9 +101,14 @@ class MainActivity : ComponentActivity() {
                             player.stop()
                         },
                         colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.width(240.dp)
+                        modifier = Modifier.size(70.dp),
+                        shape = CircleShape
                     ) {
-                        Text(text = "Stop Playing", color = White, fontSize = 18.sp)
+//                        Text(text = "Stop Playing", color = White, fontSize = 18.sp)
+                        Icon(imageVector = Icons.Default.Stop,
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.size(40.dp))
                     }
                 }
             }
