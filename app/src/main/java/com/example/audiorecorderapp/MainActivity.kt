@@ -2,13 +2,15 @@ package com.example.audiorecorderapp
 
 import android.Manifest
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
@@ -18,10 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import com.example.audiorecorderapp.playback.AndroidAudioPlayer
@@ -41,23 +43,25 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AudioRecorderAppTheme {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 700.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    val context = LocalContext.current
                     Button(
                         onClick = {
                             File(cacheDir, "audio.mp3").also {
                                 recorder.start(it)
                                 audioFile = it
+                                Toast.makeText(context,"Start Recording", Toast.LENGTH_SHORT).show()
                             }
                         },
                         colors = buttonColors(backgroundColor = Red),
                         modifier = Modifier.size(70.dp),
                         shape = CircleShape
                     ) {
-//                        Text(text = "Start Recording", color = White, fontSize = 18.sp)
                         Icon(
                             imageVector = Icons.Default.Mic,
                             contentDescription = null,
@@ -69,6 +73,7 @@ class MainActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             recorder.stop()
+                            Toast.makeText(context,"Stop Recording", Toast.LENGTH_SHORT).show()
                         },
                         colors = buttonColors(backgroundColor = Red),
                         modifier = Modifier.size(70.dp),
