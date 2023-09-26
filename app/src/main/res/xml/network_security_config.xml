@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">192.168.171.1</domain>
+        <domain includeSubdomains="true">https://tnnmq4m3-5000.asse.devtunnels.ms/</domain>
         <domain includeSubdomains="true">10.0.2.2</domain> <!-- untuk emulator Android -->
         <domain includeSubdomains="true">10.0.3.2</domain> <!-- untuk Genymotion -->
     </domain-config>
