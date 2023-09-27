@@ -8,6 +8,10 @@ import android.util.Log
 import com.example.audiorecorderapp.db.Recording
 import com.example.audiorecorderapp.helper.DBHelper
 import com.example.audiorecorderapp.service.ApiClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,18 +48,18 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
 
     }
 
-    override fun stop() {
+    override fun stop(inputAudioTitle:String, inputAudioLabel:String) {
         recorder?.stop()
         recorder?.reset()
 
-        val audioId = UUID.randomUUID().toString() // Anda bisa mengganti dengan ID lain jika diinginkan
-        val audioTitle = currentOutputFile.nameWithoutExtension
+        val audioId = UUID.randomUUID().toString()
+//        val audioTitle = currentOutputFile.nameWithoutExtension
+        val audioTitle = inputAudioTitle
         val audioTimestamp = getCurrentTimestamp()
         val audioPath = currentOutputFile.absolutePath
         val audioSize = getFileSize(audioPath)
         val audioDuration = getDuration(audioPath)
-
-
+        val audioLabel = inputAudioLabel
 
         val recording = Recording(
             audio_id = audioId,
@@ -63,7 +67,8 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
             audio_timestamp = audioTimestamp,
             audio_path = audioPath,
             audio_size = audioSize,
-            audio_duration = audioDuration
+            audio_duration = audioDuration,
+            audio_label = audioLabel
         )
 
         val insertResult = DBHelper(context).addRecording(recording)
@@ -80,8 +85,11 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
             recording.audio_timestamp,
             recording.audio_path,
             recording.audio_size,
-            recording.audio_duration
+            recording.audio_duration,
+            recording.audio_label
         )
+
+
 
         call.enqueue(object: Callback<Map<String, String>> {
             override fun onResponse(
@@ -99,12 +107,10 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
                 Log.e("API_CALL", "Error calling API", t)
             }
         })
-// ...
-
-
 
         recorder = null
     }
+
 
 }
 private fun getFileSize(filePath: String): Float {
@@ -127,5 +133,6 @@ private fun getCurrentTimestamp(): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     return sdf.format(Date())
 }
+
 
 
