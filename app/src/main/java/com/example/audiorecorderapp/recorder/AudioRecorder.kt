@@ -4,5 +4,7 @@ import java.io.File
 
 interface AudioRecorder {
     fun start(outputFile: File)
-    fun stop()
+    fun stop(inputAudioTitle:String, inputAudioLabel: String)
+
+//    fun onClickInsert()
 }
