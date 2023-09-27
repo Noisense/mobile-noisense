@@ -11,6 +11,8 @@ import com.example.audiorecorderapp.service.ApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,7 +50,7 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
 
     }
 
-    override fun stop(inputAudioTitle:String, inputAudioLabel:String) {
+    override fun stop(inputAudioTitle: String, inputAudioLabel: String) {
         recorder?.stop()
         recorder?.reset()
 
@@ -90,8 +92,7 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
         )
 
 
-
-        call.enqueue(object: Callback<Map<String, String>> {
+        call.enqueue(object : Callback<Map<String, String>> {
             override fun onResponse(
                 call: Call<Map<String, String>>,
                 response: Response<Map<String, String>>
@@ -111,27 +112,50 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
         recorder = null
     }
 
+    override suspend fun uploadAudioFileAsync() {
+        try {
+            withContext(Dispatchers.IO) {
+                val fileId = RequestBody.create(MediaType.parse("text/plain"), "123")
+                val audioIDRequest = RequestBody.create(MediaType.parse("text/plain"), "41405d6b-fd88-4963-9e47-5e85994d4a82")
+                val path = RequestBody.create(MediaType.parse("text/plain"), "/audio_files")
+                val audioFile = currentOutputFile
 
-}
-private fun getFileSize(filePath: String): Float {
-    val file = File(filePath)
-    return file.length() / 1024f // mengembalikan ukuran dalam KB
-}
+                val insertFileResponse =
+                    ApiClient.apiService.uploadAudio(fileId, audioIDRequest, path, audioFile)
 
-private fun getDuration(filePath: String): String {
-    val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(filePath)
-    val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-    val timeInMillis = time!!.toLong()
-    val hours = (timeInMillis / (1000 * 60 * 60)).toInt()
-    val minutes = (timeInMillis / (1000 * 60) % 60).toInt()
-    val seconds = (timeInMillis / 1000 % 60).toInt()
-    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
-}
+                if (insertFileResponse.isSuccessful) {
+                    val uploadResponse = insertFileResponse.body()
+                } else {
+                    val errorBody = insertFileResponse.errorBody()?.string()
 
-private fun getCurrentTimestamp(): String {
-    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    return sdf.format(Date())
+                }
+            }
+        } catch (e: Exception) {
+            println(e.message)
+        }
+    }
+
+
+    private fun getFileSize(filePath: String): Float {
+        val file = File(filePath)
+        return file.length() / 1024f // mengembalikan ukuran dalam KB
+    }
+
+    private fun getDuration(filePath: String): String {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(filePath)
+        val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        val timeInMillis = time!!.toLong()
+        val hours = (timeInMillis / (1000 * 60 * 60)).toInt()
+        val minutes = (timeInMillis / (1000 * 60) % 60).toInt()
+        val seconds = (timeInMillis / 1000 % 60).toInt()
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    private fun getCurrentTimestamp(): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sdf.format(Date())
+    }
 }
 
 

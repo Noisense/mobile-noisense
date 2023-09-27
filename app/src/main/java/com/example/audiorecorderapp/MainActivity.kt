@@ -108,7 +108,6 @@ class MainActivity : ComponentActivity() {
                             onDismissRequest = {
                                 showDialog = false
                             },
-
                             title = {
                                 Text(
                                     text = "Insert Information",
@@ -145,7 +144,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-
                             confirmButton = {
                                 Button(onClick = {
                                     // Proses inputText jika diperlukan
