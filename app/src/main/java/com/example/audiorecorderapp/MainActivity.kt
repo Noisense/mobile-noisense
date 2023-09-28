@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             recorder.stop()
-                            Toast.makeText(context,"Stop Recording", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context,"Stop Recording  ", Toast.LENGTH_SHORT).show()
                         },
                         colors = buttonColors(backgroundColor = Red),
                         modifier = Modifier.size(70.dp),
