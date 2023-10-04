@@ -1,11 +1,12 @@
 package com.example.audiorecorderapp
 
+//import androidx.appcompat.app.AlertDialog
 import android.Manifest
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-//import androidx.appcompat.app.AlertDialog
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,11 +32,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +59,7 @@ class MainActivity : ComponentActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 0)
         setContent {
         var showDialog by remember { mutableStateOf(false) }
+        var isRecording by remember { mutableStateOf(false) }
             AudioRecorderAppTheme {
                 Row(
                     modifier = Modifier
@@ -64,109 +68,123 @@ class MainActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     val context = LocalContext.current
-                    Button(
-                        onClick = {
-                            File(cacheDir, "audio.mp3").also {
-                                recorder.start(it)
-                                audioFile = it
-                                Toast.makeText(context,"Start Recording", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.size(70.dp),
-                        shape = CircleShape
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Mic,
-                            contentDescription = null,
-                            tint = White,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        onClick = {
+                    if (!isRecording) {
+                        Button(
+                            onClick = {
+                                isRecording=true
+                                File(cacheDir, "audio.mp3").also {
+                                    recorder.start(it)
+                                    audioFile = it
+                                    Toast.makeText(
+                                        context,
+                                        "Start Recording",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
+                            colors = buttonColors(backgroundColor = Red),
+                            modifier = Modifier.size(70.dp),
+                            shape = CircleShape
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Mic,
+                                contentDescription = null,
+                                tint = White,
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }else {
+                        Button(
+                            onClick = {
 //                            recorder.stop()
 //                            Toast.makeText(context,"Stop Recording", Toast.LENGTH_SHORT).show()
-                            showDialog = true
-                        },
-                        colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.size(70.dp),
-                        shape = CircleShape
-                    ) {
-//                        Text(text = "Stop Recording", color = White, fontSize = 18.sp)
-                        Icon(imageVector = Icons.Default.Stop,
-                            contentDescription = null,
-                            tint = White,
-                            modifier = Modifier.size(40.dp))
-                    }
-                    if (showDialog) {
-                        var inputTitle by remember { mutableStateOf("")}
-                        var inputLabel by remember { mutableStateOf("")}
-
-                        AlertDialog(
-                            onDismissRequest = {
-                                showDialog = false
+                                showDialog = true
                             },
+                            colors = buttonColors(backgroundColor = Red),
+                            modifier = Modifier.size(70.dp),
+                            shape = CircleShape
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Stop,
+                                contentDescription = null,
+                                tint = White,
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                        if (showDialog) {
+                            var inputTitle by remember { mutableStateOf("") }
+                            var inputLabel by remember { mutableStateOf("") }
 
-                            title = {
-                                Text(
-                                    text = "Insert Information",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Blue,
-                                    modifier = Modifier.padding(8.dp).fillMaxHeight()
-                                )
-                            }
-                            ,
-                            text = {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                ) {
-                                    // Form Input Pertama
-                                    OutlinedTextField(
-                                        value = inputTitle,
-                                        onValueChange = { inputTitle = it },
-                                        label = { Text("Input Title") },
-                                        singleLine = true,
+                            AlertDialog(
+                                onDismissRequest = {
+                                    showDialog = false
+                                },
+
+                                title = {
+                                    Text(
+                                        text = "Insert Information",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Blue,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .fillMaxHeight()
+                                    )
+                                },
+                                text = {
+                                    Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(bottom = 12.dp)   )
+                                            .padding(8.dp)
+                                    ) {
+                                        // Form Input Pertama
+                                        OutlinedTextField(
+                                            value = inputTitle,
+                                            onValueChange = { inputTitle = it },
+                                            label = { Text("Input Title") },
+                                            singleLine = true,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 12.dp)
+                                        )
 
-                                    // Form Input Kedua
-                                    OutlinedTextField(
-                                        value = inputLabel,
-                                        onValueChange = { inputLabel = it },
-                                        label = { Text("Input Label") },
-                                        singleLine = true,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            },
+                                        // Form Input Kedua
+                                        OutlinedTextField(
+                                            value = inputLabel,
+                                            onValueChange = { inputLabel = it },
+                                            label = { Text("Input Label") },
+                                            singleLine = true,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                },
 
-                            confirmButton = {
-                                Button(onClick = {
-                                    // Proses inputText jika diperlukan
-                                    recorder.stop(inputTitle, inputLabel)
-                                    showDialog = false
-                                    Toast.makeText(context,"Success Inserted", Toast.LENGTH_SHORT).show()
-                                }) {
-                                    Text("Konfirmasi")
+                                confirmButton = {
+                                    Button(onClick = {
+                                        // Proses inputText jika diperlukan
+                                        recorder.stop(inputTitle, inputLabel)
+                                        showDialog = false
+                                        Toast.makeText(
+                                            context,
+                                            "Success Inserted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }) {
+                                        Text("Konfirmasi")
+                                    }
+                                },
+                                dismissButton = {
+                                    Button(onClick = {
+                                        showDialog = false
+                                    }) {
+                                        Text("Batal")
+                                    }
                                 }
-                            },
-                            dismissButton = {
-                                Button(onClick = {
-                                    showDialog = false
-                                }) {
-                                    Text("Batal")
-                                }
-                            }
-                        )
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
                     Button(
                         onClick = {
                             player.playFile(audioFile ?: return@Button)
@@ -196,6 +214,17 @@ class MainActivity : ComponentActivity() {
                             tint = White,
                             modifier = Modifier.size(40.dp))
                     }
+                }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ){
+                    Image(
+                        painter = painterResource(id = R.drawable.noisense),
+                        contentDescription = null,
+                        modifier = Modifier.size(500.dp)
+                    )
                 }
             }
         }
