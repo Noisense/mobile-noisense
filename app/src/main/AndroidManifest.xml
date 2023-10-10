@@ -11,9 +11,9 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:networkSecurityConfig="@xml/network_security_config"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@mipmap/ic_noisense"
         android:label="Noisense"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_noisense_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AudioRecorderApp"
         tools:targetApi="31">
