@@ -60,12 +60,14 @@ class MainActivity : ComponentActivity() {
         setContent {
         var showDialog by remember { mutableStateOf(false) }
         var isRecording by remember { mutableStateOf(false) }
+        var isPlaying by remember { mutableStateOf(false) }
             AudioRecorderAppTheme {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 700.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     val context = LocalContext.current
                     if (!isRecording) {
@@ -170,6 +172,7 @@ class MainActivity : ComponentActivity() {
                                             "Success Inserted",
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                        isRecording=false
                                     }) {
                                         Text("Konfirmasi")
                                     }
@@ -185,40 +188,47 @@ class MainActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-                    Button(
-                        onClick = {
-                            player.playFile(audioFile ?: return@Button)
-                        },
-                        colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.size(70.dp),
-                        shape = CircleShape
-                    ) {
-//                        Text(text = "Play", color = White, fontSize = 18.sp)
-                        Icon(imageVector = Icons.Default.PlayArrow,
-                            contentDescription = null,
-                            tint = White,
-                            modifier = Modifier.size(40.dp))
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        onClick = {
-                            player.stop()
-                        },
-                        colors = buttonColors(backgroundColor = Red),
-                        modifier = Modifier.size(70.dp),
-                        shape = CircleShape
-                    ) {
-//                        Text(text = "Stop Playing", color = White, fontSize = 18.sp)
-                        Icon(imageVector = Icons.Default.Stop,
-                            contentDescription = null,
-                            tint = White,
-                            modifier = Modifier.size(40.dp))
+
+                    if (!isPlaying) {
+                        Button(
+                            onClick = {
+                                isPlaying=true
+                                player.playFile(audioFile ?: return@Button)
+                            },
+                            colors = buttonColors(backgroundColor = Red),
+                            modifier = Modifier.size(70.dp),
+                            shape = CircleShape
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = null,
+                                tint = White,
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }else {
+                        Button(
+                            onClick = {
+                                player.stop()
+                                isPlaying=false
+                            },
+                            colors = buttonColors(backgroundColor = Red),
+                            modifier = Modifier.size(70.dp),
+                            shape = CircleShape
+                        ) {
+                            Icon(imageVector = Icons.Default.Stop,
+                                contentDescription = null,
+                                tint = White,
+                                modifier = Modifier.size(40.dp))
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     Image(
                         painter = painterResource(id = R.drawable.noisense),
