@@ -57,9 +57,11 @@ class MainActivity : ComponentActivity() {
 
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 0)
         setContent {
-        var showDialog by remember { mutableStateOf(false) }
-        var isRecording by remember { mutableStateOf(false) }
-        var isPlaying by remember { mutableStateOf(false) }
+            var showDialog by remember { mutableStateOf(false) }
+            var isRecording by remember { mutableStateOf(false) }
+            var isPlaying by remember { mutableStateOf(false) }
+            var isError by remember { mutableStateOf(false) }
+            var text by remember { mutableStateOf("") }
             AudioRecorderAppTheme {
                 Row(
                     modifier = Modifier
@@ -98,6 +100,8 @@ class MainActivity : ComponentActivity() {
                     }else {
                         Button(
                             onClick = {
+//                            recorder.stop()
+//                            Toast.makeText(context,"Stop Recording", Toast.LENGTH_SHORT).show()
                                 showDialog = true
                             },
                             colors = buttonColors(backgroundColor = Red),
@@ -125,7 +129,7 @@ class MainActivity : ComponentActivity() {
                                         text = "Insert Information",
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Blue,
+                                        color = Color.White,
                                         modifier = Modifier
                                             .padding(8.dp)
                                             .fillMaxHeight()
@@ -161,15 +165,21 @@ class MainActivity : ComponentActivity() {
 
                                 confirmButton = {
                                     Button(onClick = {
-                                        // Proses inputText jika diperlukan
-                                        recorder.stop(inputTitle, inputLabel)
-                                        showDialog = false
-                                        Toast.makeText(
-                                            context,
-                                            "Success Inserted",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        isRecording=false
+                                        if (inputTitle.isEmpty() && inputLabel.isEmpty()) {
+                                            isError = true
+                                            Toast.makeText(context,"Berikan nama file!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            isError = false
+                                            // Proses inputText jika diperlukan
+                                            recorder.stop(inputTitle, inputLabel)
+                                            showDialog = false
+                                            Toast.makeText(
+                                                context,
+                                                "Success Inserted",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            isRecording=false
+                                        }
                                     }) {
                                         Text("Konfirmasi")
                                     }
