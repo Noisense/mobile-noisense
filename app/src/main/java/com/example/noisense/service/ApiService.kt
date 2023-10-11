@@ -1,8 +1,6 @@
-package com.example.audiorecorderapp.service
+package com.example.noisense.service
 
-import com.example.audiorecorderapp.db.AudioFile
-import com.example.audiorecorderapp.db.UploadResponse
-import okhttp3.MultipartBody
+import com.example.noisense.db.UploadResponse
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
@@ -15,7 +13,7 @@ import java.io.File
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("add_recording")
+    @POST("backend/add-audios")
     fun addRecording(
         @Field("audio_id") audioId: String,
         @Field("audio_title") audioTitle: String,

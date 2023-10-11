@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp
+package com.example.noisense
 
 import org.junit.Test
 

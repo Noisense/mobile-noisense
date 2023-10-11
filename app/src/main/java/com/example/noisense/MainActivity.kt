@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp
+package com.example.noisense
 
 //import androidx.appcompat.app.AlertDialog
 import android.Manifest
@@ -42,9 +42,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import com.example.audiorecorderapp.playback.AndroidAudioPlayer
-import com.example.audiorecorderapp.recorder.AndroidAudioRecorder
-import com.example.audiorecorderapp.ui.theme.AudioRecorderAppTheme
+import com.example.noisense.playback.AndroidAudioPlayer
+import com.example.noisense.recorder.AndroidAudioRecorder
+import com.example.noisense.ui.theme.AudioRecorderAppTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -98,8 +98,6 @@ class MainActivity : ComponentActivity() {
                     }else {
                         Button(
                             onClick = {
-//                            recorder.stop()
-//                            Toast.makeText(context,"Stop Recording", Toast.LENGTH_SHORT).show()
                                 showDialog = true
                             },
                             colors = buttonColors(backgroundColor = Red),

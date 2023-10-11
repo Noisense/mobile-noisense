@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp.ui.theme
+package com.example.noisense.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

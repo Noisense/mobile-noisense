@@ -1,10 +1,10 @@
-package com.example.audiorecorderapp.helper
+package com.example.noisense.helper
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.audiorecorderapp.db.Recording
+import com.example.noisense.db.Recording
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, "recordings.db", null, 2) {
 

@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp.recorder
+package com.example.noisense.recorder
 
 import java.io.File
 

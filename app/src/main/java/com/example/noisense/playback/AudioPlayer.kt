@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp.playback
+package com.example.noisense.playback
 
 import java.io.File
 

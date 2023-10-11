@@ -1,10 +1,10 @@
-package com.example.audiorecorderapp.service
+package com.example.noisense.service
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://tnnmq4m3-5000.asse.devtunnels.ms/"
+    private const val BASE_URL = "http://localhost:80/"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
