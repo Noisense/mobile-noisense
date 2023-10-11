@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 700.dp),
+                        .padding(top = 650.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -205,7 +205,6 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.size(40.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.padding(20.dp))
                     }else {
                         Button(
                             onClick = {
@@ -221,7 +220,6 @@ class MainActivity : ComponentActivity() {
                                 tint = White,
                                 modifier = Modifier.size(40.dp))
                         }
-                        Spacer(modifier = Modifier.padding(20.dp))
                     }
                 }
                 Column(
