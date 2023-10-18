@@ -85,8 +85,6 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
             recording.audio_label
         )
 
-
-
         call.enqueue(object: Callback<Map<String, String>> {
             override fun onResponse(
                 call: Call<Map<String, String>>,

@@ -13,7 +13,7 @@ import java.io.File
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("backend/add-audios")
+    @POST("add_recording")
     fun addRecording(
         @Field("audio_id") audioId: String,
         @Field("audio_title") audioTitle: String,
@@ -30,6 +30,6 @@ interface ApiService {
         @Part("file_id") fileId: RequestBody,
         @Part("audio_id") audioId: RequestBody,
         @Part("path") path: RequestBody,
-        @Part audio: File
+        @Part("audio") audio: File
     ): Response<UploadResponse>
 }
