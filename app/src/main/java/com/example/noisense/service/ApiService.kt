@@ -23,10 +23,10 @@ interface ApiService {
         @Field("audio_duration") audioDuration: String,
         @Field("audio_label") audioLabel: String
     ): Call<Map<String, String>>
-
+     
     @Multipart
     @POST("upload_audio_file")
-    suspend fun uploadAudio(
+    fun uploadAudio(
         @Part("file_id") fileId: RequestBody,
         @Part("audio_id") audioId: RequestBody,
         @Part("path") path: RequestBody,
