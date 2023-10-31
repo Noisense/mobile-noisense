@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp.db
+package com.example.noisense.db
 
 data class Recording(
     val audio_id: String,

@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp
+package com.example.noisense
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

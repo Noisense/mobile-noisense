@@ -1,8 +1,6 @@
-package com.example.audiorecorderapp.service
+package com.example.noisense.service
 
-import com.example.audiorecorderapp.db.AudioFile
-import com.example.audiorecorderapp.db.UploadResponse
-import okhttp3.MultipartBody
+import com.example.noisense.db.UploadResponse
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
@@ -25,13 +23,13 @@ interface ApiService {
         @Field("audio_duration") audioDuration: String,
         @Field("audio_label") audioLabel: String
     ): Call<Map<String, String>>
-
+     
     @Multipart
     @POST("upload_audio_file")
-    suspend fun uploadAudio(
+    fun uploadAudio(
         @Part("file_id") fileId: RequestBody,
         @Part("audio_id") audioId: RequestBody,
         @Part("path") path: RequestBody,
-        @Part audio: File
+        @Part("audio") audio: File
     ): Response<UploadResponse>
 }

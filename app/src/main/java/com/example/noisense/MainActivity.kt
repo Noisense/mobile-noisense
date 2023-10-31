@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp
+package com.example.noisense
 
 //import androidx.appcompat.app.AlertDialog
 import android.Manifest
@@ -42,9 +42,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import com.example.audiorecorderapp.playback.AndroidAudioPlayer
-import com.example.audiorecorderapp.recorder.AndroidAudioRecorder
-import com.example.audiorecorderapp.ui.theme.AudioRecorderAppTheme
+import com.example.noisense.playback.AndroidAudioPlayer
+import com.example.noisense.recorder.AndroidAudioRecorder
+import com.example.noisense.ui.theme.AudioRecorderAppTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -57,9 +57,11 @@ class MainActivity : ComponentActivity() {
 
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 0)
         setContent {
-        var showDialog by remember { mutableStateOf(false) }
-        var isRecording by remember { mutableStateOf(false) }
-        var isPlaying by remember { mutableStateOf(false) }
+            var showDialog by remember { mutableStateOf(false) }
+            var isRecording by remember { mutableStateOf(false) }
+            var isPlaying by remember { mutableStateOf(false) }
+            var isError by remember { mutableStateOf(false) }
+            var text by remember { mutableStateOf("") }
             AudioRecorderAppTheme {
                 Row(
                     modifier = Modifier
@@ -127,7 +129,7 @@ class MainActivity : ComponentActivity() {
                                         text = "Insert Information",
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Blue,
+                                        color = Color.White,
                                         modifier = Modifier
                                             .padding(8.dp)
                                             .fillMaxHeight()
@@ -163,15 +165,21 @@ class MainActivity : ComponentActivity() {
 
                                 confirmButton = {
                                     Button(onClick = {
-                                        // Proses inputText jika diperlukan
-                                        recorder.stop(inputTitle, inputLabel)
-                                        showDialog = false
-                                        Toast.makeText(
-                                            context,
-                                            "Success Inserted",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        isRecording=false
+                                        if (inputTitle.isEmpty() && inputLabel.isEmpty()) {
+                                            isError = true
+                                            Toast.makeText(context,"Berikan nama file!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            isError = false
+                                            // Proses inputText jika diperlukan
+                                            recorder.stop(inputTitle, inputLabel)
+                                            showDialog = false
+                                            Toast.makeText(
+                                                context,
+                                                "Success Inserted",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            isRecording=false
+                                        }
                                     }) {
                                         Text("Konfirmasi")
                                     }

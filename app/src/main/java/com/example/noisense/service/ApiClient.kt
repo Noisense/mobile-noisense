@@ -1,4 +1,4 @@
-package com.example.audiorecorderapp.service
+package com.example.noisense.service
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

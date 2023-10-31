@@ -1,17 +1,13 @@
-package com.example.audiorecorderapp.recorder
+package com.example.noisense.recorder
 
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
-import com.example.audiorecorderapp.db.Recording
-import com.example.audiorecorderapp.helper.DBHelper
-import com.example.audiorecorderapp.service.ApiClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.RequestBody
+import com.example.noisense.db.Recording
+import com.example.noisense.helper.DBHelper
+import com.example.noisense.service.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -88,8 +84,6 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
             recording.audio_duration,
             recording.audio_label
         )
-
-
 
         call.enqueue(object: Callback<Map<String, String>> {
             override fun onResponse(
