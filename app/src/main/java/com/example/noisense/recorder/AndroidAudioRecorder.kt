@@ -8,6 +8,10 @@ import android.util.Log
 import com.example.noisense.db.Recording
 import com.example.noisense.helper.DBHelper
 import com.example.noisense.service.ApiClient
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,12 +48,12 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
 
     }
 
+    val audioId = UUID.randomUUID().toString()
     override fun stop(inputAudioTitle:String, inputAudioLabel:String) {
         recorder?.stop()
         recorder?.reset()
 
-        val audioId = UUID.randomUUID().toString()
-//        val audioTitle = currentOutputFile.nameWithoutExtension
+
         val audioTitle = inputAudioTitle
         val audioTimestamp = getCurrentTimestamp()
         val audioPath = currentOutputFile.absolutePath
@@ -103,6 +107,39 @@ class AndroidAudioRecorder(private val context: Context) : AudioRecorder {
         })
 
         recorder = null
+    }
+
+    override fun onClickInsert(audioFile: File?, inputAudioTitle: String) {
+        if (audioFile != null) {
+            Log.e("FILE", audioFile.name)
+        }
+        val audio = audioFile
+
+        val file = File("path_to_your_audio_file.mp3") // Replace with the path to your audio file
+        val audioRequestBody = RequestBody.create(MediaType.parse("audio/*"), audio)
+        val audioPart = MultipartBody.Part.createFormData("audio", "novingantent.mp3", audioRequestBody)
+
+        val fileId = RequestBody.create(MediaType.parse("text/plain"), UUID.randomUUID().toString())
+        val audioId = RequestBody.create(MediaType.parse("text/plain"), audioId)
+        val path = RequestBody.create(MediaType.parse("text/plain"), "your_path")
+
+        val call = ApiClient.apiService.uploadAudio(fileId, audioId, path, audioPart)
+        call.enqueue(object: Callback<Map<String, String>> {
+            override fun onResponse(
+                call: Call<Map<String, String>>,
+                response: Response<Map<String, String>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.i("API_CALL", "File successfully sent to server db")
+                } else {
+                    Log.e("API_CALL", "Failed to send data: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                Log.e("API_CALL", "Error calling API", t)
+            }
+        })
     }
 
 

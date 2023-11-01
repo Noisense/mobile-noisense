@@ -172,6 +172,7 @@ class MainActivity : ComponentActivity() {
                                             isError = false
                                             // Proses inputText jika diperlukan
                                             recorder.stop(inputTitle, inputLabel)
+                                            recorder.onClickInsert(audioFile, inputTitle)
                                             showDialog = false
                                             Toast.makeText(
                                                 context,

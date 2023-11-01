@@ -1,6 +1,7 @@
 package com.example.noisense.service
 
 import com.example.noisense.db.UploadResponse
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
@@ -30,6 +31,6 @@ interface ApiService {
         @Part("file_id") fileId: RequestBody,
         @Part("audio_id") audioId: RequestBody,
         @Part("path") path: RequestBody,
-        @Part("audio") audio: File
-    ): Response<UploadResponse>
+        @Part audio: MultipartBody.Part
+    ): Call<Map<String, String>>
 }
