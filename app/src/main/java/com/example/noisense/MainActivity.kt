@@ -253,6 +253,8 @@ class MainActivity : ComponentActivity() {
                                                 "Success Inserted",
                                                 Toast.LENGTH_SHORT
                                             ).show()
+                                            timerState?.cancel()
+                                            elapsedTime = 0L
                                         }
                                     }) {
                                         Text("Konfirmasi")
