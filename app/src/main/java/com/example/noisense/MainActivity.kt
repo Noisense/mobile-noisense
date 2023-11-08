@@ -61,6 +61,9 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import java.sql.Time
+import java.util.Timer
+import kotlin.concurrent.timer
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 import kotlin.time.Duration
@@ -71,12 +74,19 @@ class MainActivity : ComponentActivity() {
     private var audioFile: File? = null
 
     @OptIn(ExperimentalMaterialApi::class, ExperimentalTime::class)
-    fun formatElapsedTime(elapsedTime: Duration): String {
-        val hours = (elapsedTime.inSeconds / 3600).toInt()
-        val minutes = ((elapsedTime.inSeconds % 3600) / 60).toInt()
-        val seconds = (elapsedTime.inSeconds % 60).toInt()
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    fun formatTime(elapsedTime: Long): String {
+        val minutes = (elapsedTime / 60000).toString().padStart(2, '0')
+        val seconds = ((elapsedTime % 60000) / 1000).toString().padStart(2, '0')
+        val milliseconds = ((elapsedTime % 1000) / 10).toString().padStart(3, '0')
+        return "$minutes:$seconds:$milliseconds"
     }
+
+//    fun formatElapsedTime(elapsedTime: Duration): String {
+//        val hours = (elapsedTime.inSeconds / 3600).toInt()
+//        val minutes = ((elapsedTime.inSeconds % 3600) / 60).toInt()
+//        val seconds = (elapsedTime.inSeconds % 60).toInt()
+//        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+//    }
     @OptIn(ExperimentalTime::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,11 +95,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             var showDialog by remember { mutableStateOf(false) }
-            var elapsedTime by remember { mutableStateOf(Duration.ZERO) }
+            var elapsedTime by remember { mutableStateOf(0L) }
             var isRecording by remember { mutableStateOf(false) }
             var isPlaying by remember { mutableStateOf(false) }
             var isError by remember { mutableStateOf(false) }
-            val timerScope = rememberCoroutineScope()
+            var timerState by remember { mutableStateOf<Timer?>(null) }
 
             AudioRecorderAppTheme {
                 Row(
@@ -100,10 +110,13 @@ class MainActivity : ComponentActivity() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val context = LocalContext.current
-                    var startTime = Duration.ZERO
                     if (!isRecording) {
                         Button(
                             onClick = {
+                                val startTime = System.currentTimeMillis() - elapsedTime
+                                timerState = timer(period = 10) {
+                                    elapsedTime = System.currentTimeMillis() - startTime
+                                }
                                 isRecording=true
                                 File(cacheDir, "audio.mp3").also {
                                     recorder.start(it)
@@ -113,14 +126,6 @@ class MainActivity : ComponentActivity() {
                                         "Start Recording",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    timerScope.launch {
-                                        var startTime = Duration.ZERO
-                                        while (isRecording) {
-                                            elapsedTime = startTime
-                                            startTime = startTime + 1.seconds
-                                            delay(1.seconds.toLongMilliseconds())
-                                        }
-                                    }
                                 }
                             },
                             colors = buttonColors(backgroundColor = Red),
@@ -248,8 +253,6 @@ class MainActivity : ComponentActivity() {
                                                 "Success Inserted",
                                                 Toast.LENGTH_SHORT
                                             ).show()
-                                            timerScope.coroutineContext.cancelChildren()
-                                            elapsedTime = Duration.ZERO
                                         }
                                     }) {
                                         Text("Konfirmasi")
@@ -312,7 +315,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.size(500.dp)
                     )
                     Text(
-                        "${formatElapsedTime(elapsedTime)}",
+                        text = formatTime(elapsedTime),
                         fontSize = 30.sp
                     )
                 }
